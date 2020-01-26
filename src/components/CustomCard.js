@@ -17,9 +17,7 @@ function CustomCard(props) {
       <Link to={link}>
         <Card className="card">
           <CardActionArea className="card-action-area">
-            {image &&
-              <CardMedia component="img" className="card-img" height="100" image={image} title="image" />
-            }
+            {image && <CardMedia component="img" className="card-img" height="100" image={image} title="image" />}
             <CardContent className="card-context">{children}</CardContent>
           </CardActionArea>
           {footer && (

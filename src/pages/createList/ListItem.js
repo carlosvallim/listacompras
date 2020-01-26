@@ -5,13 +5,14 @@ import CustomCard from '../../components/CustomCard';
 import ListItemFooter from './ListItemFooter';
 
 function ListItem(props) {
-  const { product, quantity, unit, price, total } = props.item;
+  const { item, deleteProduct } = props;
+  const { product, quantity, unit, price } = props.item;
 
   return (
     <CustomCard
       containerClass="list-item"
       link="#"
-      footer={<ListItemFooter total={total} />}
+      footer={<ListItemFooter deleteProduct={deleteProduct} item={item} />}
       image="https://upload.wikimedia.org/wikipedia/commons/4/45/A_small_cup_of_coffee.JPG"
     >
       <div>

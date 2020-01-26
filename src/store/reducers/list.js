@@ -1,9 +1,11 @@
+import { createSelector } from 'reselect';
+import uuid from 'uuid';
 import { Types } from '../actions/list';
 
 const initialState = {
   list: null,
   items: [],
-}
+};
 
 export default function list(state = initialState, action) {
   switch (action.type) {
@@ -12,8 +14,13 @@ export default function list(state = initialState, action) {
         list: action.list,
         items: [
           ...state.items,
-          { ...action.product, total: getItemTotal(action.product) }
+          { ...action.product, total: getItemTotal(action.product), id: uuid() }
         ]
+      };
+    case Types.DELETE_PRODUCT:
+      return {
+        ...state,
+        items: state.items.filter(item => item.id !== action.productId),
       };
     default:
       return state;
@@ -23,3 +30,8 @@ export default function list(state = initialState, action) {
 function getItemTotal(product) {
   return product.price * product.quantity;
 }
+
+export const getListTotal = createSelector(
+  state => state.list.items,
+  items => items.reduce((total, item) => total + item.total, 0)
+);
