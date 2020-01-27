@@ -5,7 +5,7 @@ import ListFooter from './ListFooter';
 import ListItem from './ListItem';
 
 function List(props) {
-  const { list, total } = props
+  const { list, total, openedItems, closedItems } = props
 
   return (
     <CustomCard
@@ -16,8 +16,8 @@ function List(props) {
       <div>
         <p className="title">{list}</p>
         <div className="list-card-body">
-          <ListItem icon={faShoppingBasket} text="1 Item(s) Restante(s)" />
-          <ListItem icon={faCheck} text="2 Item(s) Comprado(s)" />
+          <ListItem icon={faShoppingBasket} text={`${openedItems} Item(s) Restante(s)`} />
+          <ListItem icon={faCheck} text={`${closedItems} Item(s) Comprado(s)`} />
         </div>
       </div>
     </CustomCard>

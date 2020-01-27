@@ -22,6 +22,7 @@ function CreateList(props) {
             item={item}
             key={item.id}
             deleteProduct={props.deleteProduct}
+            toggleProduct={props.toggleProduct}
           />
         )}
       </div>

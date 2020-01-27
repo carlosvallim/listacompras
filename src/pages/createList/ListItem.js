@@ -5,7 +5,7 @@ import CustomCard from '../../components/CustomCard';
 import ListItemFooter from './ListItemFooter';
 
 function ListItem(props) {
-  const { item, deleteProduct } = props;
+  const { item, deleteProduct, toggleProduct } = props;
   const { product, quantity, unit, price } = props.item;
 
   return (
@@ -20,7 +20,7 @@ function ListItem(props) {
           <Typography variant="subtitle1" component="h2">
             {product}
           </Typography>
-          <Checkbox />
+          <Checkbox checked={item.checked} onClick={() => toggleProduct(item.id)} />
         </div>
         <Typography component="p">{quantity} {unit}</Typography>
         <Typography component="p">R$ {price}</Typography>

@@ -3,17 +3,23 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import List from './List';
 import NewList from './NewList';
-import { getListTotal } from '../../store/reducers/list';
+import { getListTotal, getOpenedItems, getClosedItems } from '../../store/reducers/list';
 import './Home.css';
 import './List.css';
 
 function Home(props) {
-  const { list, total } = props;
+  const { list, total, openedItems, closedItems } = props;
 
   return (
     <div className="page-container">
       <NewList />
-      {list.items.length > 0 && <List list={list.list} total={total} />}
+      {list.items.length > 0 &&
+        <List
+          list={list.list}
+          total={total}
+          openedItems={openedItems}
+          closedItems={closedItems}
+        />}
     </div>
   );
 }
@@ -21,6 +27,8 @@ function Home(props) {
 const mapStateToProps = state => ({
   list: state.list,
   total: getListTotal(state),
+  openedItems: getOpenedItems(state),
+  closedItems: getClosedItems(state),
 });
 
 Home.propTypes = {
