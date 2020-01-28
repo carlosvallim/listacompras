@@ -16,7 +16,7 @@ function CustomCard(props) {
     <div className={containerClass}>
       <Link to={link}>
         <Card className="card">
-          <CardActionArea className="card-action-area">
+          <CardActionArea onClick={props.action} className="card-action-area">
             {image && <CardMedia component="img" className="card-img" height="100" image={image} title="image" />}
             <CardContent className="card-context">{children}</CardContent>
           </CardActionArea>

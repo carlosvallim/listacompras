@@ -9,8 +9,14 @@ const initialState = {
 
 export default function list(state = initialState, action) {
   switch (action.type) {
+    case Types.NEW_LIST:
+      return {
+        ...initialState,
+        date: getDate()
+      };
     case Types.ADD_PRODUCT:
       return {
+        ...state,
         list: action.list,
         items: [
           ...state.items,
@@ -28,6 +34,12 @@ export default function list(state = initialState, action) {
         ...state,
         items: toggleItem(state.items, action.productId),
       };
+    case Types.UPDATE_PRODUCT:
+      return {
+        ...state,
+        list: action.list,
+        items: updateProduct(state.items, action.product),
+      };
     default:
       return state;
   }
@@ -36,6 +48,21 @@ export default function list(state = initialState, action) {
 //Helpers
 function getItemTotal(product) {
   return product.price * product.quantity;
+}
+
+function updateProduct(items, product) {
+  const index = items.findIndex(item => item.id === product.id);
+  return [
+    ...items.slice(0, index),
+    { ...product, total: getItemTotal(product) },
+    ...items.slice(index + 1),
+  ];
+}
+
+function getDate() {
+  const date = new Date();
+  const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+  return date.toLocaleDateString('pt-BR', options);
 }
 
 function toggleItem(items, productId) {

@@ -6,12 +6,12 @@ import { bindActionCreators } from 'redux';
 import { Creators as FormActions } from '../../store/actions/form';
 
 function ListItemFooter(props) {
-  const { item, deleteProduct, startUpdate } = props;
+  const { item, deleteProduct, startUpdate, list } = props;
 
   return (
     <div className="list-card-footer">
       <div className="list-card-footer-actions">
-        <FontAwesomeIcon icon={faPen} color="#00b0ff" size="1x" onClick={() => startUpdate(item)} />
+        <FontAwesomeIcon icon={faPen} color="#00b0ff" size="1x" onClick={() => startUpdate(list, item)} />
         <FontAwesomeIcon icon={faTrash} color="#e91e63" size="1x" onClick={() => deleteProduct(item.id)} />
       </div>
       <p>Total: R$ {item.total}</p>

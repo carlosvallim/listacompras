@@ -8,7 +8,7 @@ import Button from '@material-ui/core/Button';
 import { Creators as FormActions } from '../../store/actions/form';
 //import { useInputChange } from '../../components/useInputChange';
 
-const unidades = ['Kilos', 'Litros', 'Unidades'];
+const unidades = ['Quilos', 'Litros', 'Unidades'];
 
 function Form(props) {
   /* 1 forma de fazer
@@ -35,12 +35,16 @@ function Form(props) {
 
   useEffect(() => {
     if (props.form.action === 'update') {
-      const { list } = inputValues;
+      console.log('aqui update')
       const { product, quantity, unit, price } = props.form.productToUpdate;
-      setInputValues({ list, product, quantity, unit, price });
+      setInputValues({ list: props.form.listToUpdate, product, quantity, unit, price });
       setShowErrors(false);
+    } else if (props.form.action === 'new') {
+      console.log('aqui new')
+      setInputValues({ list: props.form.listToUpdate })
     }
-  }, [props.form.productToUpdate])
+
+  }, [props.form.productToUpdate, props.form.listToUpdate])
 
   /*
   const handleSubmit = () => {
@@ -72,11 +76,29 @@ function Form(props) {
     if (!inputValues.list || !inputValues.product || !inputValues.quantity || !inputValues.unit) {
       setShowErrors(true)
     } else {
-      const { product, quantity, unit, price, list } = inputValues;
-      props.addProduct({ product, quantity, unit, price }, list)
-      setInputValues({ list, product: '', quantity: '', unit: '', price: '' })
-      setShowErrors(false)
+      props.form.action === 'update' ? updateItem() : addItem();
     }
+  }
+
+  const addItem = () => {
+    const { product, quantity, unit, price, list } = inputValues;
+    props.addProduct({ product, quantity, unit, price }, list)
+    clearState();
+    props.finishAdd();
+  }
+
+  const updateItem = () => {
+    const { product, quantity, unit, price, list } = inputValues;
+    const { id, checked } = props.form.productToUpdate;
+    props.updateProduct({ product, quantity, unit, price, id, checked }, list);
+    clearState();
+    props.finishUpdate();
+  }
+
+  const clearState = () => {
+    const { list } = inputValues;
+    setInputValues({ list, product: '', quantity: '', unit: '', price: '' })
+    setShowErrors(false)
   }
 
   /*
@@ -99,75 +121,80 @@ function Form(props) {
     setInputValues({ ...inputValues, [name]: value });
   };
 
-  return (
-    <form className="form-container">
-      <div className="form-row">
-        <TextField
-          id="list"
-          name="list"
-          label="Lista"
-          required
-          value={inputValues.list}
-          onChange={handleChange}
-          error={!inputValues.list && showErrors}
-        //{...list}
-        />
-        <Button variant="outlined" onClick={handleSubmit} color="secondary">Adicionar</Button>
-      </div>
-      <div className="form-row">
-        <TextField
-          id="product"
-          name="product"
-          label="Produto"
-          required
-          value={inputValues.product}
-          onChange={handleChange}
-          error={!inputValues.product && showErrors}
-        //{...product}
-        />
-        <TextField
-          id="quantity"
-          name="quantity"
-          label="Quantidade"
-          required
-          value={inputValues.quantity}
-          onChange={handleChange}
-          error={!inputValues.quantity && showErrors}
-        //{...quantity}
-        />
-        <TextField
-          id="unit"
-          name="unit"
-          select
-          label="Unidade"
-          required
-          value={inputValues.unit}
-          onChange={handleChange}
-          error={!inputValues.unit && showErrors}
-        //{...unit}
-        >
-          {unidades.map(option => (
-            <MenuItem key={option} value={option}>{option}</MenuItem>
-          ))}
-        </TextField>
-        <TextField
-          id="price"
-          name="price"
-          label="Preço"
-          value={inputValues.price}
-          onChange={handleChange}
-          //{...price}
-          InputProps={{
-            startAdornment: <InputAdornment position="start">R$</InputAdornment>
-          }}
-        />
-      </div>
-    </form>
-  )
+  if (!props.showForm) {
+    return <div />
+  } else {
+    return (
+      < form className="form-container" >
+        <div className="form-row">
+          <TextField
+            id="list"
+            name="list"
+            label="Lista"
+            required
+            value={inputValues.list}
+            onChange={handleChange}
+            error={!inputValues.list && showErrors}
+          //{...list}
+          />
+          <Button variant="outlined" onClick={handleSubmit} color="secondary">Salvar</Button>
+        </div>
+        <div className="form-row">
+          <TextField
+            id="product"
+            name="product"
+            label="Produto"
+            required
+            value={inputValues.product}
+            onChange={handleChange}
+            error={!inputValues.product && showErrors}
+          //{...product}
+          />
+          <TextField
+            id="quantity"
+            name="quantity"
+            label="Quantidade"
+            required
+            value={inputValues.quantity}
+            onChange={handleChange}
+            error={!inputValues.quantity && showErrors}
+          //{...quantity}
+          />
+          <TextField
+            id="unit"
+            name="unit"
+            select
+            label="Unidade"
+            required
+            value={inputValues.unit}
+            onChange={handleChange}
+            error={!inputValues.unit && showErrors}
+          //{...unit}
+          >
+            {unidades.map(option => (
+              <MenuItem key={option} value={option}>{option}</MenuItem>
+            ))}
+          </TextField>
+          <TextField
+            id="price"
+            name="price"
+            label="Preço"
+            value={inputValues.price}
+            onChange={handleChange}
+            //{...price}
+            InputProps={{
+              startAdornment: <InputAdornment position="start">R$</InputAdornment>
+            }}
+          />
+        </div>
+      </form >
+    )
+  }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state, ownProps) => ({
   form: state.form,
+  showForm: state.form.action || ownProps.url === 'novo'
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators(FormActions, dispatch);

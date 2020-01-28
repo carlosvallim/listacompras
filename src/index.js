@@ -21,7 +21,7 @@ ReactDOM.render(
           <Header />
           <Switch>
             <Route exact path="/" component={App} />
-            <Route path="/lista" component={CreateList} />
+            <Route path="/lista/:action" component={CreateList} />
           </Switch>
         </div>
       </Router>
